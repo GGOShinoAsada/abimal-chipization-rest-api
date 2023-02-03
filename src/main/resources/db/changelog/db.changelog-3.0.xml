@@ -1,0 +1,71 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+
+
+    <!--<changeSet id="3.0.0" author="roman">
+        <sql>
+            insert into roles (name) values ('ROLE_USER')
+        </sql>
+        <sql>
+            insert into roles (name) values ('ROLE_ADMIN')
+        </sql>
+
+    </changeSet>-->
+
+    <changeSet id="3.0.1" author="roman">
+        <!--encode size 12, passwords: user, admin -->
+        <sql>
+            insert into public.account (first_name, last_name, email, password) values ('Ivanov', 'Ivan', 'user@gmail.com', '$2a$12$Zm9LU9DYTjgnezM6dgMnEecp1Ztz0467hsk.6rYAMr4lDmetW3jCS')
+        </sql>
+        <sql>
+            insert into public.account (first_name, last_name, email, password) values ('Petrov', 'Petr', 'admin@gmail.com', '$2a$12$mFkgzo0qHOLO2SVplbhC1eVCtcmeUz/mZ7dUZ62QrxALtdQFz5yEW')
+        </sql>
+    </changeSet>
+
+    <!--<changeSet id="3.0.2" author="roman">
+        <sql>
+            insert into user_roles (account_id, role_id) values (1,1);
+        </sql>
+        <sql>
+            insert into user_roles (account_id, role_id) values (2,2);
+        </sql>
+    </changeSet>-->
+
+    <changeSet id="3.0.3" author="roman">
+        <insert tableName="animal_type">
+            <column name="type" value="bird"/>
+            <column name="type" value="fish"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="3.0.4" author="roman">
+        <sql>
+            insert into public.location_point (latitude, longitude) values (3.12564, 4.4586)
+        </sql>
+        <sql>
+            insert into public.location_point (latitude, longitude) values (5.7812, 6.45789)
+        </sql>
+
+    </changeSet>
+
+    <changeSet id="3.0.5" author="roman">
+        <sql>
+            insert into public.animal_visited_location (location_point, datetime_of_visit_location_point) values (1, '2001-09-29 00:00:00')
+        </sql>
+       <sql>
+           insert into public.animal_visited_location (location_point, datetime_of_visit_location_point) values (1, '2002-07-23 00:00:00')
+       </sql>
+    </changeSet>
+
+    <changeSet id="3.0.6" author="roman">
+        <sql>
+            insert into public.animal (animal_types, weight, length, height, gender, life_status, chipping_datetime, chipper_id, chipping_location_id, visited_locations, death_datetime)
+            values ('{1}',45.4, 25.36, 54.78, 'MALE', 'ALIVE', '2000-06-10 00:03:00', 123, 1, '{1}', null);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
