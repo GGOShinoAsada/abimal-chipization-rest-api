@@ -4,6 +4,7 @@ import com.example.demo.model.AnimalType;
 import com.example.demo.repository.AnimalTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.AttributeConverter;
@@ -13,65 +14,70 @@ import java.util.*;
 @Component
 public class AnimalTypeListConverter implements AttributeConverter<Set<AnimalType>, String> {
 
-    @Autowired
-    private AnimalTypeRepository repository;
 
-    @Override
-    public String convertToDatabaseColumn(Set<AnimalType> attribute) {
-        log.info("convert array of long to string");
-        String output = "";
-        if (attribute!=null)
-        {
-            for (AnimalType item : attribute)
-            {
-                output+=item.getId()+',';
-            }
-            output = output.substring(0, output.length()-2);
-        }
-        else {
-            log.warn("input data is empty");
-        }
-        return output;
+    private final AnimalTypeRepository animalTypeRepository;
+
+    @Autowired
+    public AnimalTypeListConverter(@Lazy AnimalTypeRepository animalTypeRepository) {
+        this.animalTypeRepository = animalTypeRepository;
     }
 
     @Override
-    public Set<AnimalType> convertToEntityAttribute(String data) {
-        log.info("convert string to list of long");
-        Set<AnimalType> output = new HashSet();
-        if (data!=null && !data.equals(""))
+    public String convertToDatabaseColumn(Set<AnimalType> attribute) {
+        log.info("convert set of animalType to string");
+        String animalTypeIds = "";
+        if (attribute!=null)
         {
-            try{
-                List<String> list = Arrays.asList(data.split(","));
-                for (String value : list)
+            if (attribute.size()>0)
+            {
+                for (AnimalType entity: attribute)
                 {
-                    long id = Long.parseLong(value);
-                    Optional<AnimalType> box = repository.findById(id);
-                    if (box.isPresent())
+                    animalTypeIds+=entity.getId()+",";
+                }
+                animalTypeIds = animalTypeIds.substring(0, animalTypeIds.length()-1);
+            }
+        }
+        log.info("convert set of animalType to string success");
+        return animalTypeIds;
+    }
+
+    @Override
+    public Set<AnimalType> convertToEntityAttribute(String dbData) {
+        log.info("convert string to set of animalType");
+        Set<AnimalType> entitySet = new HashSet();
+        if (dbData!=null)
+        {
+            String[] array = dbData.split(",");
+            try {
+                for (int i=0; i<array.length; i++)
+                {
+                    if (!array[i].isBlank())
                     {
-                        output.add(box.get());
-                    }
-                    else
-                    {
-                        log.warn("element was not found");
-                        output = new HashSet();
-                        break;
+                        Long id = Long.parseLong(array[i]);
+                        Optional<AnimalType> box = animalTypeRepository.findById(id);
+                        if (box.isPresent())
+                        {
+                            entitySet.add(box.get());
+                        }
+                        else
+                        {
+                            log.warn("animal type with id {} was not found", id);
+                        }
                     }
                 }
             }
-            catch (IllegalArgumentException ex)
+            catch (NumberFormatException ex)
             {
-                log.error("input data contains repeat elements");
-                output = new HashSet();
+                log.error("parse exception occurred");
+                entitySet = new HashSet();
             }
             catch (Exception ex)
             {
                 log.error(ex.getStackTrace().toString());
-                output = new HashSet();
             }
         }
-        else {
-            log.warn("input data is empty");
-        }
-        return output;
+        log.info("convert string to set of animalType success");
+        return entitySet;
     }
+
 }

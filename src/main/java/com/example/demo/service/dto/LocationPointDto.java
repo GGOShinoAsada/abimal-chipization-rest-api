@@ -1,10 +1,11 @@
 package com.example.demo.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
+@NoArgsConstructor
 @Data
 public class LocationPointDto {
 
@@ -12,11 +13,15 @@ public class LocationPointDto {
     private Long id;
 
     @JsonProperty
-    @NotNull
+    @NotEmpty(message = "latitude parameter must be positive")
+    @Min(value = -90, message = "latitude: min value is -90")
+    @Max(value = 90, message = "latitude: max value is 90")
     private Double latitude;
 
     @JsonProperty
-    @NotNull
+    @NotEmpty(message = "longitude must be positive")
+    @Min(value = -180, message = "longitude: min value is -180")
+    @Max(value = 180, message = "longitude: max value is 180")
     private Double longitude;
 
 }

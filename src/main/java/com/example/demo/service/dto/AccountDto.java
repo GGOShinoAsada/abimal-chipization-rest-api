@@ -2,31 +2,40 @@ package com.example.demo.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
+@NoArgsConstructor
 @Data
 public class AccountDto {
 
     @JsonProperty("id")
+    @NotNull(message = "id is mandatory")
+    @Positive(message = "account id must be positive")
     private Integer id;
 
     @JsonProperty("firstName")
-    @NotNull
+    @NotNull(message = "firstName is mandatory")
     private String firstName;
 
     @JsonProperty("lastName")
-    @NotNull
+    @NotBlank(message = "lastName is mandatory")
     private String lastName;
 
     @JsonProperty("email")
-    @Email
-    @NotNull
+    @NotNull(message = "email is mandatory")
+    @Email(message = "email is not valid", regexp = "^(.+)@(\\\\S+)$")
     private String email;
 
     @JsonProperty("password")
-    @NotNull
+    @NotNull(message = "password is mandatory")
     private String password;
+
+    public AccountDto(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import lombok.Data;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,7 +16,7 @@ public class AnimalVisitedLocation {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "location_point", nullable = false)
+    @JoinColumn(name = "location_point", nullable = true)
     private LocationPoint locationPoint;
 
     @Temporal(TemporalType.DATE)

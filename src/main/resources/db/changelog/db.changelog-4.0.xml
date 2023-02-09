@@ -3,9 +3,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <include file="classpath:db/changelog/db.changelog-1.0.xml"/>
-    <include file="classpath:db/changelog/db.changelog-2.0.xml"/>
-    <include file="classpath:db/changelog/db.changelog-3.0.xml"/>
-    <include file="classpath:db/changelog/db.changelog-4.0.xml"/>
+    <changeSet id="4.0.0" author="roman">
+        <addForeignKeyConstraint baseTableName="animal" baseColumnNames="chipper_id" constraintName="fk_animal_chipper_id_account_id" referencedTableName="account"
+                                  referencedColumnNames="id"/>
+    </changeSet>
 
 </databaseChangeLog>

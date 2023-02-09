@@ -64,7 +64,7 @@
     <changeSet id="3.0.6" author="roman">
         <sql>
             insert into public.animal (animal_types, weight, length, height, gender, life_status, chipping_datetime, chipper_id, chipping_location_id, visited_locations, death_datetime)
-            values ('{1}',45.4, 25.36, 54.78, 'MALE', 'ALIVE', '2000-06-10 00:03:00', 123, 1, '{1}', null);
+            values ('1',45.4, 25.36, 54.78, 'MALE', 'ALIVE', '2000-06-10 00:03:00', 1, 1, '1', null);
         </sql>
     </changeSet>
 

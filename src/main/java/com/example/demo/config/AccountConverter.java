@@ -14,8 +14,13 @@ import java.util.Optional;
 @Component
 public class AccountConverter implements Converter<String, Account> {
 
+
+    private final AccountRepository accountRepository;
+
     @Autowired
-    private AccountRepository accountRepository;
+    public AccountConverter(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
 
     @Override
     public Account convert(String source) {

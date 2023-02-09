@@ -1,5 +1,8 @@
 package com.example.demo.config;
 
+import com.example.demo.service.AnimalService;
+import com.example.demo.service.AnimalTypeService;
+import com.example.demo.service.impl.AnimalTypeServiceImpl;
 import com.example.demo.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -20,8 +23,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public UserDetailsService userDetailsService()
@@ -46,8 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().ignoringAntMatchers("/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/login")
-                .authenticated()
+                .antMatchers("/login")
+                .permitAll()//.authenticated()
+                .antMatchers("/register").permitAll()
                 .and()
                 .httpBasic();
         //super.configure(http);
@@ -58,4 +68,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     {
         return new BCryptPasswordEncoder(12);
     }
+
+
 }

@@ -18,9 +18,9 @@ public class LocationPoint {
     private Double latitude;
 
     @Column(name = "longitude", nullable = false)
-    private double longitude;
+    private Double longitude;
 
-    @OneToMany(mappedBy = "locationPoint")
+    @OneToMany(mappedBy = "locationPoint", fetch = FetchType.LAZY)
     Set<AnimalVisitedLocation> locations;
 
     @OneToMany(mappedBy = "chippingLocationId")

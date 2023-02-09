@@ -1,11 +1,13 @@
 package com.example.demo.model;
 
 import com.example.demo.config.AnimalTypeListConverter;
-import com.example.demo.config.LocationPointListConverter;
+import com.example.demo.config.AnimalVisitedLocationPointConverter;
 import lombok.Data;
+import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -43,15 +45,16 @@ public class Animal {
     private Date chippingDatetime;
 
     @Column(name = "chipper_id",nullable = false)
-    private  Integer chippedId;
+    private  Integer chipperId;
 
     @ManyToOne
     @JoinColumn(name = "chipping_location_id", nullable = false)
     private LocationPoint chippingLocationId;
 
     @Column(name = "visited_locations",nullable = false)
-    @Convert(converter = LocationPointListConverter.class)
-    private Set<LocationPoint> visitedLocations;
+
+    @Convert(converter = AnimalVisitedLocationPointConverter.class)
+    private List<AnimalVisitedLocation> animalVisitedLocations;
 
     @Column(name = "death_datetime", nullable = true)
     @Temporal(TemporalType.DATE)

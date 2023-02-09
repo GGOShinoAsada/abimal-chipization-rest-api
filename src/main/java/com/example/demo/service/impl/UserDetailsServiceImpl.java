@@ -11,8 +11,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,9 +22,12 @@ import java.util.Set;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+
     @Autowired
     private AccountRepository repository;
 
+
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) {
         log.info("load user by username");
@@ -30,7 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (username!=null || !username.equals(""))
         {
 
-            Optional<Account> box = repository.searchByEmail(username);
+            Optional<Account> box = repository.findByEmail(username);
             if (box.isPresent())
             {
                 entity = box.get();

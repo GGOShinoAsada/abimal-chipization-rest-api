@@ -47,7 +47,7 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="animal_types" type="bigint[]">
+            <column name="animal_types" type="text">
                 <constraints nullable="true"/>
             </column>
             <column name="weight" type="float">
@@ -75,7 +75,7 @@
             <column type="bigint" name="chipping_location_id">
                 <constraints nullable="false"/>
             </column>
-            <column name="visited_locations" type="bigint[]">
+            <column name="visited_locations" type="text">
                 <constraints nullable="true"/>
             </column>
             <column name="death_datetime" type="date">
