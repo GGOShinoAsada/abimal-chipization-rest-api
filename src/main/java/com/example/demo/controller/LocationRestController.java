@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -21,7 +22,6 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/locations")
-@Validated
 public class LocationRestController {
 
 
@@ -60,7 +60,7 @@ public class LocationRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
-    public ResponseEntity<LocationPointDto> addLocationPoint(@RequestBody LocationPointDto dto)
+    public ResponseEntity<LocationPointDto> addLocationPoint(@Valid @RequestBody LocationPointDto dto)
     {
         log.info("adding new location point");
         try
@@ -86,7 +86,7 @@ public class LocationRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{id}")
-    public ResponseEntity<LocationPointDto> updateLocationPoint(@PathVariable Long id, @RequestBody LocationPointDto dto)
+    public ResponseEntity<LocationPointDto> updateLocationPoint(@PathVariable Long id, @Valid @RequestBody LocationPointDto dto)
     {
         log.info("updating information about location point");
         if (checkId(id))

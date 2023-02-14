@@ -11,25 +11,25 @@ import javax.validation.constraints.*;
 public class AccountDto {
 
     @JsonProperty("id")
-    @NotNull(message = "id is mandatory")
-    @Positive(message = "account id must be positive")
+   // @NotNull(message = "id is mandatory")
+    //@Positive(message = "account id must be positive")
     private Integer id;
 
     @JsonProperty("firstName")
-    @NotNull(message = "firstName is mandatory")
+    @NotEmpty(message = "firstName is mandatory")
     private String firstName;
 
     @JsonProperty("lastName")
-    @NotBlank(message = "lastName is mandatory")
+    @NotEmpty(message = "lastName is mandatory")
     private String lastName;
 
     @JsonProperty("email")
-    @NotNull(message = "email is mandatory")
-    @Email(message = "email is not valid", regexp = "^(.+)@(\\\\S+)$")
+    @NotEmpty(message = "email is mandatory")
+    @Email(message = "email is not valid", regexp = "^(.+)@(.+)$")
     private String email;
 
     @JsonProperty("password")
-    @NotNull(message = "password is mandatory")
+    @NotEmpty(message = "password is mandatory")
     private String password;
 
     public AccountDto(String firstName, String lastName, String email) {

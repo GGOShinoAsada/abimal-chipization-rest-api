@@ -80,8 +80,8 @@ public class AnimalMapperImpl implements AnimalMapper {
                 entity.setGender(dto.getGender());
             if (dto.getLifeStatus()!=null)
                 entity.setLifeStatus(dto.getLifeStatus());
-            if (dto.getChippingDatetime()!=null)
-                entity.setChippingDatetime(dto.getChippingDatetime());
+            if (dto.getChippingDateTime()!=null)
+                entity.setChippingDateTime(dto.getChippingDateTime());
             if (dto.getChipperId()!=null)
                 entity.setChipperId(dto.getChipperId());
             if (dto.getChippingLocationId()!=null)
@@ -139,8 +139,8 @@ public class AnimalMapperImpl implements AnimalMapper {
                 dto.setGender(entity.getGender());
             if (entity.getLifeStatus()!=null)
                 dto.setLifeStatus(entity.getLifeStatus());
-            if (entity.getChippingDatetime()!=null)
-                dto.setChippingDatetime(entity.getChippingDatetime());
+            if (entity.getChippingDateTime()!=null)
+                dto.setChippingDateTime(entity.getChippingDateTime());
             if (entity.getChipperId()!=null)
                 dto.setChipperId(entity.getChipperId());
             if (entity.getChippingLocationId()!=null)

@@ -48,7 +48,7 @@ public class AnimalDto {
 
     @JsonProperty
     @NotNull(message = "chippingDate time is mandatory")
-    private Date chippingDatetime;
+    private Date chippingDateTime;
 
     @JsonProperty
     @NotNull(message = "chipperId is mandatory")

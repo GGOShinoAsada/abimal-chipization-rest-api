@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.Date;
 
@@ -11,10 +12,10 @@ import java.util.Date;
 public class AnimalVisitedLocationSearchDto {
 
     @JsonProperty
-    @NotBlank(message = "startDateTime is mandatory")
+    @NotNull(message = "startDateTime is mandatory")
     private String startDateTime;
 
     @JsonProperty
-    @NotBlank(message = "endDateTime is mandatory")
+    @NotNull(message = "endDateTime is mandatory")
     private String endDateTime;
 }

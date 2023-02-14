@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface AnimalRepository extends PagingAndSortingRepository<Animal, Long> {
 
-    Page<Animal> findByChippingDatetimeAfterAndChippingDatetimeBeforeAndChipperIdAndChippingLocationId_IdAndLifeStatusAndGender(Date startDate, Date endDate, Integer chipperId, Long chippingLocationId, LifeStatus lifeStatus, Gender gender, Pageable pageable);
+    Page<Animal> findByChippingDateTimeAfterAndChippingDateTimeBeforeAndChipperIdAndChippingLocationId_IdAndLifeStatusAndGender(Date startDate, Date endDate, Integer chipperId, Long chippingLocationId, LifeStatus lifeStatus, Gender gender, Pageable pageable);
 
     Optional<Animal> findByChippingLocationId_Id(Long id);
 

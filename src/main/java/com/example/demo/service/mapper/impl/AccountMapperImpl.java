@@ -2,6 +2,7 @@ package com.example.demo.service.mapper.impl;
 
 import com.example.demo.model.Account;
 import com.example.demo.service.dto.AccountDto;
+import com.example.demo.service.dto.AccountViewDto;
 import com.example.demo.service.mapper.AccountMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,57 @@ public class AccountMapperImpl implements AccountMapper {
                 dto.setPassword(entity.getPassword());
         }
         return dto;
+    }
+
+    @Override
+    public AccountViewDto convertEntityToViewDto(Account entity) {
+        log.info("account: convert entity to viewDto");
+        AccountViewDto viewDto = new AccountViewDto();
+        if (entity!=null)
+        {
+            if (entity.getId()!=null)
+            {
+                viewDto.setId(entity.getId());
+            }
+            if (!entity.getFirstName().isEmpty())
+            {
+                viewDto.setFirstName(entity.getFirstName());
+            }
+            if (!entity.getLastName().isEmpty())
+            {
+                viewDto.setLastName(entity.getLastName());
+            }
+            if (!entity.getEmail().isEmpty())
+            {
+                viewDto.setEmail(entity.getEmail());
+            }
+        }
+        return viewDto;
+    }
+
+    @Override
+    public AccountViewDto convertDtoToViewDto(AccountDto dto) {
+        log.info("account: convert dto to viewDto");
+        AccountViewDto viewDto = new AccountViewDto();
+        if (dto!=null)
+        {
+            if (dto.getId()!=null)
+            {
+                viewDto.setId(dto.getId());
+            }
+            if (!dto.getFirstName().isEmpty())
+            {
+                viewDto.setFirstName(dto.getFirstName());
+            }
+            if (!dto.getLastName().isEmpty())
+            {
+                viewDto.setLastName(dto.getLastName());
+            }
+            if (!dto.getEmail().isEmpty())
+            {
+                viewDto.setEmail(dto.getEmail());
+            }
+        }
+        return viewDto;
     }
 }

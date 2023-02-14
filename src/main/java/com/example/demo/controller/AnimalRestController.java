@@ -25,7 +25,6 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/animals")
-@Validated
 public class AnimalRestController {
 
 
@@ -82,14 +81,14 @@ public class AnimalRestController {
     {
         log.info("search animal by parameters");
         List<AnimalDto> dtoList = new ArrayList();
-        Boolean isValidPagination = pageable.getPageNumber()>0 && pageable.getPageSize()>0;
+        Boolean isValidPagination = pageable.getPageNumber()>=0 && pageable.getPageSize()>0;
         if (!isValidPagination)
         {
             log.warn("pagination parameters must be positive");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            dtoList = animalService.search(dto, PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize()));
+            dtoList = animalService.search(dto, pageable);
             return new ResponseEntity<>(dtoList, HttpStatus.OK);
         }
         catch (ResponseStatusException ex)
@@ -101,7 +100,7 @@ public class AnimalRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
-    public ResponseEntity<AnimalDto> addNewAnimal(@RequestBody AnimalDto dto)
+    public ResponseEntity<AnimalDto> addNewAnimal(@Valid @RequestBody AnimalDto dto)
     {
         log.info("adding new animal");
         try {
@@ -126,7 +125,7 @@ public class AnimalRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{id}")
-    public ResponseEntity<AnimalDto> updateAnimal(@PathVariable Long id, @RequestBody AnimalDto dto)
+    public ResponseEntity<AnimalDto> updateAnimal(@PathVariable Long id, @Valid @RequestBody AnimalDto dto)
     {
         log.info("updating information about animal");
         Boolean isValid = checkId(id);
@@ -222,7 +221,7 @@ public class AnimalRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{animalId}/types")
-    public ResponseEntity<AnimalDto> updateAnimalTypeForAnimal(@PathVariable("animalId") Long animalId, @RequestBody AnimalTypeUpdateDto dto)
+    public ResponseEntity<AnimalDto> updateAnimalTypeForAnimal(@PathVariable("animalId") Long animalId, @Valid @RequestBody AnimalTypeUpdateDto dto)
     {
         log.info("updating animal type for animal");
         Boolean isValid = checkId(animalId) && dto!=null;
@@ -257,7 +256,7 @@ public class AnimalRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{animalId}/types/{typeId}")
-    public ResponseEntity<Void> removeAnimalTypeForAnimal(@PathVariable("animalId") Long animalId, @PathVariable("typeId") Long typeId)
+    public ResponseEntity<Void> removeAnimalTypeForAnimal(@PathVariable("animalId") Long animalId, @Valid @PathVariable("typeId") Long typeId)
     {
         log.info("removing animal type for animal");
         if (checkId(animalId) && checkId(typeId))
@@ -295,13 +294,13 @@ public class AnimalRestController {
     public ResponseEntity<List<AnimalVisitedLocationDto>> findAnimalVisitedLocations(@PathVariable Long id, AnimalVisitedLocationSearchDto dto, Pageable pageable)
     {
         log.info("search animal visited locations");
-        Boolean isValidRequest = pageable.getPageNumber()>0 && pageable.getPageSize()>0;
+        Boolean isValidRequest = pageable.getPageNumber()>=0 && pageable.getPageSize()>0;
         if (isValidRequest)
         {
             if (checkId(id))
             {
                 try {
-                   List<AnimalVisitedLocationDto> list = animalVisitedLocationService.findAll(id, dto, PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize()));
+                   List<AnimalVisitedLocationDto> list = animalVisitedLocationService.findAll(id, dto, pageable);
                    return new ResponseEntity<>(list, HttpStatus.OK);
                 }
                 catch (ResponseStatusException ex)
@@ -448,7 +447,7 @@ public class AnimalRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/types")
-    public ResponseEntity<AnimalTypeDto> addAnimalType(@RequestBody AnimalTypeDto dto)
+    public ResponseEntity<AnimalTypeDto> addAnimalType(@Valid @RequestBody AnimalTypeDto dto)
     {
         log.info("adding new animal type");
         try
@@ -474,7 +473,7 @@ public class AnimalRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/types/{id}")
-    public ResponseEntity<AnimalTypeDto> updateAnimalType(@PathVariable Long id, @RequestBody AnimalTypeDto dto)
+    public ResponseEntity<AnimalTypeDto> updateAnimalType(@PathVariable Long id, @Valid @RequestBody AnimalTypeDto dto)
     {
         log.info("updating information about animal type");
         if (checkId(id))

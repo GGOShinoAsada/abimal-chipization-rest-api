@@ -7,6 +7,7 @@ import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.AnimalRepository;
 import com.example.demo.service.AccountService;
 import com.example.demo.service.dto.AccountDto;
+import com.example.demo.service.dto.AccountViewDto;
 import com.example.demo.service.mapper.AccountMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,25 +48,32 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public List<AccountDto> findAll() {
+    public List<AccountViewDto> findAll() {
         log.info("get all accounts");
-        List<AccountDto> list = new ArrayList();
-        accountRepository.findAll().forEach(entity->list.add(accountMapper.toDto(entity)));
+        List<AccountViewDto> list = new ArrayList();
+        accountRepository.findAll().forEach(entity->list.add(accountMapper.convertEntityToViewDto(entity)));
         return list;
     }
 
     @Transactional
     @Override
-    public List<AccountDto> search(AccountDto dto, Pageable pageable) {
-        log.info("search account by parameters: firstName = {}, lastName = {}, email = {}", dto.getFirstName(), dto.getLastName(), dto.getEmail());
-
-        Page<Account> entities = accountRepository.findByFirstNameContainingAndLastNameContainingAndEmailContaining(dto.getFirstName(), dto.getLastName(), dto.getEmail(), pageable);
-        List<AccountDto> dtoList = new ArrayList();
+    public List<AccountViewDto> search(AccountDto dto, Pageable pageable) {
+        log.info("search account by parameters");
+        Page<Account> entities = Page.empty();
+        if (dto.getFirstName()!=null && dto.getLastName()!=null && dto.getEmail()!=null)
+        {
+            entities = accountRepository.findByFirstNameContainingAndLastNameContainingAndEmailContaining(dto.getFirstName(), dto.getLastName(), dto.getEmail(), pageable);
+        }
+        else
+        {
+            entities = accountRepository.findAll(pageable);
+        }
+        List<AccountViewDto> dtoList = new ArrayList();
         if (entities.getSize()>0)
         {
             for (Account entity: entities.toList())
             {
-                dtoList.add(accountMapper.toDto(entity));
+                dtoList.add(accountMapper.convertEntityToViewDto(entity));
             }
         }
         return dtoList;
@@ -73,12 +81,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public Optional<AccountDto> findById(Integer id) {
+    public Optional<AccountViewDto> findById(Integer id) {
         log.info("find account with id {}",id);
         Optional<Account> entity = accountRepository.findById(id);
         if (entity.isPresent())
         {
-            return Optional.of(accountMapper.toDto(entity.get()));
+            return Optional.of(accountMapper.convertEntityToViewDto(entity.get()));
         }
         else {
             String message = "account with is "+id+" was not found";
@@ -100,32 +108,38 @@ public class AccountServiceImpl implements AccountService {
                 log.warn(message);
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, message);
             }
-            isValid = !dto.getFirstName().isEmpty() && !dto.getLastName().isEmpty()
-                    && !dto.getEmail().isEmpty() && !dto.getPassword().isEmpty();
+            isValid = isAllowValue(dto.getFirstName()) && isAllowValue(dto.getLastName()) && isAllowValue(dto.getEmail()) && isAllowValue(dto.getPassword());
             if (isValid)
             {
-                isValid = !dto.getFirstName().contains(" ") && !dto.getLastName().contains(" ")
-                        && !dto.getEmail().contains(" ") && !dto.getPassword().contains(" ");
-            }
-            if (isValid)
-            {
-                isValid = !accountRepository.findByEmail(dto.getEmail()).isPresent();
+
+                isValid = isAllowEmail(dto.getEmail());
                 if (isValid)
                 {
-                    dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-                    dto = accountMapper.toDto(accountRepository.save(accountMapper.toEntity(dto)));
-                    return Optional.ofNullable(dto);
+                    isValid = !accountRepository.findByEmail(dto.getEmail()).isPresent();
+                    if (isValid)
+                    {
+                        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+                        dto = accountMapper.toDto(accountRepository.save(accountMapper.toEntity(dto)));
+                        return Optional.ofNullable(dto);
+                    }
+                    else
+                    {
+                        String message = "email "+dto.getEmail()+" is already register in system";
+                        throw new ResponseStatusException(HttpStatus.CONFLICT, message);
+                    }
                 }
                 else
                 {
-                    String message = "email "+dto.getEmail()+" is already register in system";
-                    throw new ResponseStatusException(HttpStatus.CONFLICT, message);
+                    String message = "email syntax is invalid";
+                    log.warn(message);
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+
                 }
 
             }
             else
             {
-                String message = "firstName, lastName, email and password can't be empty and contains spaces";
+                String message = "firstName, lastName, email and password are mandatory and can't contains spaces and service symbols";
                 log.warn(message);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
             }
@@ -140,23 +154,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public Optional<AccountDto> update(AccountDto dto, String userName) throws ResponseStatusException{
+    public Optional<AccountViewDto> update(AccountDto dto, String userName) throws ResponseStatusException{
         if (dto!=null && userName!=null)
         {
             log.info("update account entity {}", dto.toString());
-            Boolean isValid = !dto.getFirstName().isEmpty() && !dto.getLastName().isEmpty()
-                    && !dto.getEmail().isEmpty() && !dto.getPassword().isEmpty();
+            Boolean isValid = isAllowValue(dto.getFirstName()) && isAllowValue(dto.getLastName()) && isAllowValue(dto.getEmail()) && isAllowValue(dto.getPassword());
             if (isValid)
             {
-                isValid = !dto.getFirstName().contains(" ") && !dto.getLastName().contains(" ") && !dto.getEmail().contains(" ") && !dto.getPassword().contains(" ");
-                if (!isValid)
-                {
-                    String message = "firstName, lastName, email and password can't contains spaces";
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
-                }
-                Pattern pattern = Pattern.compile("^(.+)@(.+)$");
-                Matcher matcher = pattern.matcher(dto.getEmail());
-                isValid = matcher.matches();
+                isValid = isAllowEmail(dto.getEmail());
                 if (isValid)
                 {
                     Optional<Account> box = accountRepository.findByEmail(userName);
@@ -168,7 +173,7 @@ public class AccountServiceImpl implements AccountService {
                         {
                             dto.setPassword(passwordEncoder.encode(dto.getPassword()));
                             entity = accountRepository.save(accountMapper.toEntity(dto));
-                            return Optional.ofNullable(accountMapper.toDto(entity));
+                            return Optional.ofNullable(accountMapper.convertEntityToViewDto(entity));
                         }
                         else
                         {
@@ -195,7 +200,7 @@ public class AccountServiceImpl implements AccountService {
             }
             else
             {
-                String message = "firstName, lastName, email and password are mandatory";
+                String message = "firstName, lastName, email and password are mandatory and can't contains spaces and service symbols";
                 log.warn(message);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
             }
@@ -251,4 +256,26 @@ public class AccountServiceImpl implements AccountService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
     }
+
+   private Boolean isAllowValue(String value)
+   {
+       Boolean flag = false;
+       if (!value.isEmpty())
+       {
+           flag = !value.contains(" ") && !value.contains("\n") && !value.contains("\t");
+       }
+       return flag;
+   }
+
+   private Boolean isAllowEmail(String email)
+   {
+       Boolean flag = false;
+       if (!email.isEmpty())
+       {
+           Pattern pattern = Pattern.compile("^(.+)@(.+)$");
+           Matcher matcher = pattern.matcher(email);
+           flag = matcher.matches();
+       }
+       return flag;
+   }
 }

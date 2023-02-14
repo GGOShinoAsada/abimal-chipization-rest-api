@@ -1,0 +1,47 @@
+version: '3.9'
+services:
+# Сервис для разворачивания контейнера с базой данных
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    expose:
+    - 5432
+    ports:
+      - 5432:5432
+    environment:
+         - POSTGRES_PASSWORD=0000
+         - POSTGRES_USER=postgres
+         - POSTGRES_DB=demo
+    restart: unless-stopped
+# Сервис для разворачивания контейнера с автотестами
+
+  webapi:
+    image: webapi
+    container_name: webapi
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    links:
+      - postgres
+
+# Сервис для разворачивания контейнера с автотестами
+  tests: 
+    image: mrexpen/planet_olymp_phase1
+    pull_policy: always
+    ports:
+      - "8090:8080"
+    depends_on:
+      - webapi
+    environment:
+      SERVER_URL: http://webapi:8080
+      STAGE: 1
+      # all - запуск всех тестов из трёх доступных этапов
+      # 0, 1 или 2 - запуск тестов для соответствующего этапа
+volumes:
+  postgres-data:  

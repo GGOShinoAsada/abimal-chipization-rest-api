@@ -42,7 +42,7 @@ public class Animal {
 
     @Column(name = "chipping_datetime", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date chippingDatetime;
+    private Date chippingDateTime;
 
     @Column(name = "chipper_id",nullable = false)
     private  Integer chipperId;

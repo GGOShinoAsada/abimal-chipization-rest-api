@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.config.ResponseStatusException;
 import com.example.demo.service.AccountService;
 import com.example.demo.service.dto.AccountDto;
+import com.example.demo.service.dto.AccountViewDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -14,13 +15,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.*;
 
 @Slf4j
 @RestController
 @RequestMapping("/accounts")
-@Validated
 public class AccountRestController {
 
 
@@ -33,22 +35,22 @@ public class AccountRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
-    public ResponseEntity<List<AccountDto>> getAllAccounts()
+    public ResponseEntity<List<AccountViewDto>> getAllAccounts()
     {
         log.info("get all accounts");
-        List<AccountDto> list = accountService.findAll();
+        List<AccountViewDto> list = accountService.findAll();
         return new ResponseEntity(list, HttpStatus.OK);
     }
 
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDto> getAccountById(@PathVariable("id") Integer id)
+    public ResponseEntity<AccountViewDto> getAccountById(@PathVariable("id") Integer id)
     {
         log.info("searching account by id {}", id);
         if (checkId(id))
         {
-            Optional<AccountDto> box = accountService.findById(id);
+            Optional<AccountViewDto> box = accountService.findById(id);
             if (box.isPresent())
             {
                 log.info("account find successfully");
@@ -69,14 +71,15 @@ public class AccountRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/search")
-    public ResponseEntity<List<AccountDto>> searchAccount(AccountDto dto, Pageable pageable)
+    public ResponseEntity<List<AccountViewDto>> searchAccount(AccountDto dto, Pageable pageable)
     {
         log.info("search account by parameters");
-        List<AccountDto> dtoList = new ArrayList();
-        Boolean isValidPagination = pageable.getPageNumber()>0 && pageable.getPageSize()>0;
+        List<AccountViewDto> dtoList = new ArrayList();
+
+        Boolean isValidPagination = pageable.getPageNumber()>=0 && pageable.getPageSize()>0;
         if (isValidPagination)
         {
-            dtoList = accountService.search(dto, PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize()));
+            dtoList = accountService.search(dto, pageable);
             return new ResponseEntity(dtoList, HttpStatus.OK);
         }
         else {
@@ -87,7 +90,7 @@ public class AccountRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{id}")
-    public ResponseEntity<AccountDto> updateAccount(@PathVariable Integer id, @RequestBody AccountDto dto, Principal principal)
+    public ResponseEntity<AccountViewDto> updateAccount(@PathVariable Integer id, @RequestBody AccountDto dto, Principal principal)
     {
         log.info("updating information about account");
         Boolean isValid = checkId(id);
@@ -95,7 +98,7 @@ public class AccountRestController {
         {
             dto.setId(id);
             try {
-                Optional<AccountDto> box = accountService.update(dto, principal.getName());
+                Optional<AccountViewDto> box = accountService.update(dto, principal.getName());
                 if (box.isPresent())
                 {
                     log.info("updating success");

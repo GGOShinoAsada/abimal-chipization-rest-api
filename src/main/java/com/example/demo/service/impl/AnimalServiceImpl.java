@@ -64,34 +64,46 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional
     @Override
     public List<AnimalDto> search(AnimalSearchDto dto, Pageable pageable) throws ResponseStatusException{
-        log.info("search animal by parameters: startDateTime = {}, endDateTime = {}, chipperId = {}, chippingLocationId = {}, lifeStatus = {}, gender = {}",
-                dto.getStartDateTime(), dto.getEndDateTime(), dto.getChipperId(), dto.getChippingLocationId(), dto.getLifeStatus().name(), dto.getGender().name());
+        log.info("search animal by parameters");
         Date startDateTime = null;
         Date endDateTime = null;
-        try
+        Page<Animal> entities = Page.empty();
+        if (dto.getStartDateTime() != null && dto.getEndDateTime()!=null && dto.getChipperId()!=null && dto.getChippingLocationId()!=null && dto.getLifeStatus()!=null && dto.getGender()!=null)
         {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            sdf.setLenient(false);
-            startDateTime = sdf.parse(dto.getStartDateTime());
-            endDateTime = sdf.parse(dto.getEndDateTime());
+            try
+            {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                sdf.setLenient(false);
+                startDateTime = sdf.parse(dto.getStartDateTime());
+                endDateTime = sdf.parse(dto.getEndDateTime());
 
+            }
+            catch (ParseException ex)
+            {
+                String message = "startDateTime or endDateTime format is invalid";
+                log.warn(message);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+            }
+            entities =  entities = animalRepository.findByChippingDateTimeAfterAndChippingDateTimeBeforeAndChipperIdAndChippingLocationId_IdAndLifeStatusAndGender(startDateTime, endDateTime, dto.getChipperId(), dto.getChippingLocationId(), dto.getLifeStatus(), dto.getGender(), pageable);
         }
-        catch (ParseException ex)
+        else
         {
-            String message = "startDateTime or endDateTime format is invalid";
-            log.warn(message);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+            entities = animalRepository.findAll(pageable);
         }
-
-
-        Page<Animal> entities =  animalRepository.findByChippingDatetimeAfterAndChippingDatetimeBeforeAndChipperIdAndChippingLocationId_IdAndLifeStatusAndGender(startDateTime, endDateTime, dto.getChipperId(), dto.getChippingLocationId(), dto.getLifeStatus(), dto.getGender(), pageable);
         List<AnimalDto> dtoList = new ArrayList();
         if (entities.getSize()>0)
         {
             for (Animal entity: entities.toList())
             {
-                if (entity.getChippingLocationId().getId().equals(dto.getChippingLocationId()))
+                if (dto.getChippingLocationId()!=null )
+                {
+                    if (entity.getChippingLocationId().getId().equals(dto.getChippingLocationId()))
+                        dtoList.add(animalMapper.toDto(entity));
+                }
+                else
+                {
                     dtoList.add(animalMapper.toDto(entity));
+                }
             }
         }
         return dtoList;
@@ -104,7 +116,7 @@ public class AnimalServiceImpl implements AnimalService {
         try
         {
             validateAnimal(dto, true);
-            dto.setChippingDatetime(new Date());
+            dto.setChippingDateTime(new Date());
             dto.setLifeStatus(LifeStatus.ALIVE);
 
             dto = animalMapper.toDto(animalRepository.save(animalMapper.toEntity(dto)));
@@ -162,7 +174,7 @@ public class AnimalServiceImpl implements AnimalService {
                     }
                     dto.setAnimalTypes(typesIds);
                 }
-                dto.setChippingDatetime(entity.getChippingDatetime());
+                dto.setChippingDateTime(entity.getChippingDateTime());
                 entity = animalMapper.toEntity(dto);
                 entity = animalRepository.save(entity);
                 return Optional.ofNullable(animalMapper.toDto(entity));

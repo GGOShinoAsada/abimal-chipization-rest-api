@@ -61,22 +61,25 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
             Boolean isValid = false;
             Date startDateTime = null;
             Date endDateTime = null;
-            try
+            if (dto.getStartDateTime()!=null && dto.getEndDateTime()!=null)
             {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-                startDateTime = sdf.parse(dto.getStartDateTime());
-                endDateTime = sdf.parse(dto.getEndDateTime());
-                isValid = true;
-            }
-            catch (ParseException ex)
-            {
-                isValid = false;
-            }
-            if (!isValid)
-            {
-                String message = "startDateTime or endDateTime syntax is invalid";
-                log.warn(message);
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+                try
+                {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+                    startDateTime = sdf.parse(dto.getStartDateTime());
+                    endDateTime = sdf.parse(dto.getEndDateTime());
+                    isValid = true;
+                }
+                catch (ParseException ex)
+                {
+                    isValid = false;
+                }
+                if (!isValid)
+                {
+                    String message = "startDateTime or endDateTime syntax is invalid";
+                    log.warn(message);
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+                }
             }
             Optional<Animal> box = animalRepository.findById(id);
             if (box.isPresent())
@@ -86,8 +89,15 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
                 {
                     for (AnimalVisitedLocation location: list)
                     {
-                        if (location.getDateTimeOfVisitedLocationPoint().compareTo(startDateTime)>0
-                                && location.getDateTimeOfVisitedLocationPoint().compareTo(endDateTime)<0 )
+                        if (dto.getStartDateTime()!=null && dto.getEndDateTime()!=null)
+                        {
+                            if (location.getDateTimeOfVisitedLocationPoint().compareTo(startDateTime)>0
+                                    && location.getDateTimeOfVisitedLocationPoint().compareTo(endDateTime)<0 )
+                            {
+                                dtoList.add(animalVisitedLocationMapper.toDto(location));
+                            }
+                        }
+                        else
                         {
                             dtoList.add(animalVisitedLocationMapper.toDto(location));
                         }
