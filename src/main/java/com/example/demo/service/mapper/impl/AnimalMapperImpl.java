@@ -105,8 +105,8 @@ public class AnimalMapperImpl implements AnimalMapper {
                 }
                 entity.setAnimalVisitedLocations(chippingLocations);
             }
-            if (dto.getDeathDatetime()!=null)
-                entity.setDeathDatetime(dto.getDeathDatetime());
+            if (dto.getDeathDateTime()!=null)
+                entity.setDeathDatetime(dto.getDeathDateTime());
         }
         return entity;
     }
@@ -157,7 +157,7 @@ public class AnimalMapperImpl implements AnimalMapper {
                 dto.setVisitedLocations(animalVisitedLocationIds);
             }
             if (entity.getDeathDatetime()!=null)
-                dto.setDeathDatetime(entity.getDeathDatetime());
+                dto.setDeathDateTime(entity.getDeathDatetime());
 
         }
         return dto;

@@ -59,7 +59,7 @@ public class AnimalTypeServiceImpl implements AnimalTypeService {
         log.info("add new animal type");
         if (dto!=null)
         {
-            Boolean isValid = !dto.getType().isEmpty() && !dto.getType().contains(" ");
+            Boolean isValid = validate(dto.getType());
             if (!isValid)
             {
                 String message = "type is mandatory and can't contains spaces";
@@ -93,7 +93,7 @@ public class AnimalTypeServiceImpl implements AnimalTypeService {
             Optional<AnimalType> box = animalTypeRepository.findById(dto.getId());
             if (box.isPresent())
             {
-                Boolean isValid = !dto.getType().isEmpty() && !dto.getType().contains(" ");
+                Boolean isValid = validate(dto.getType());
                 if (!isValid)
                 {
                     String message = "type is mandatory and can't contains spaces";
@@ -178,5 +178,15 @@ public class AnimalTypeServiceImpl implements AnimalTypeService {
             log.warn(message);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
+    }
+
+    private Boolean validate(String type)
+    {
+        Boolean flag = false;
+        if (type!=null)
+        {
+            flag = !type.isEmpty() && !type.contains(" ") && !type.contains("\n") && !type.contains("\t");
+        }
+        return flag;
     }
 }

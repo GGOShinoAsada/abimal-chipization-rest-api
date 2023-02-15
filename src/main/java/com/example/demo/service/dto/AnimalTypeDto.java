@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @Data
@@ -14,15 +16,7 @@ public class AnimalTypeDto {
     private Long id;
 
     @JsonProperty
-    @NotBlank(message = "type is mandatory and must be positive")
+    @NotEmpty(message = "type is mandatory")
     private String type;
-
-    public Boolean checkSpaces()
-    {
-        Boolean check = false;
-        if (type!=null)
-            check = type.contains(" ");
-        return check;
-    }
 
 }

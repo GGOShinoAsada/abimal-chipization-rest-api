@@ -20,7 +20,7 @@ public class AnimalDto {
     private Long id;
 
     @JsonProperty
-    @NotNull(message = "animal must be have type")
+    //@NotNull(message = "animal must be have type")
     private Set<Long> animalTypes;
 
     @JsonProperty
@@ -43,11 +43,11 @@ public class AnimalDto {
     private Gender gender;
 
     @JsonProperty
-    @NotNull(message = "lifeStatus is mandatory")
+    //@NotNull(message = "lifeStatus is mandatory")
     private LifeStatus lifeStatus;
 
     @JsonProperty
-    @NotNull(message = "chippingDate time is mandatory")
+    //@NotNull(message = "chippingDate time is mandatory")
     private Date chippingDateTime;
 
     @JsonProperty
@@ -65,6 +65,6 @@ public class AnimalDto {
 
 
     @JsonProperty
-    private Date deathDatetime;
+    private Date deathDateTime;
 
 }

@@ -21,7 +21,7 @@ public class AnimalTypeMapperImpl implements AnimalTypeMapper {
         {
             if (dto.getId()!=null)
                 entity.setId(dto.getId());
-            if (dto.getType().isEmpty())
+            if (!dto.getType().isEmpty())
                 entity.setType(dto.getType());
         }
         return entity;

@@ -18,17 +18,17 @@ public class Account implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "first_name", length = 50, nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", length = 50, nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "email", length = 50, nullable = false)
+    @Column(name = "email", nullable = false)
     @Email
     private String email;
 
-    @Column(name = "password", length = 50, nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     //@CollectionTable(name = "user_roles", joinColumns = {@JoinColumn(name = "account_id")})

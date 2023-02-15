@@ -164,7 +164,7 @@ public class AccountServiceImpl implements AccountService {
                 isValid = isAllowEmail(dto.getEmail());
                 if (isValid)
                 {
-                    Optional<Account> box = accountRepository.findByEmail(userName);
+                    Optional<Account> box = accountRepository.findById(dto.getId());
                     if (box.isPresent())
                     {
                         Account entity = box.get();
@@ -218,7 +218,7 @@ public class AccountServiceImpl implements AccountService {
         log.info("remove account with id {}", id);
         if (id!=null && userName!=null)
         {
-            Optional<Account> box = accountRepository.findByEmail(userName);
+            Optional<Account> box = accountRepository.findById(id);
             if (box.isPresent())
             {
                 Account entity = box.get();
@@ -245,7 +245,7 @@ public class AccountServiceImpl implements AccountService {
             }
             else
             {
-                String message = "account with email "+userName+" was not found";
+                String message = "account with id "+id+" was not found";
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, message);
             }
         }

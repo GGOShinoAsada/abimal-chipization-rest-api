@@ -8,7 +8,6 @@ import com.example.demo.service.mapper.AnimalVisitedLocationMapper;
 import com.example.demo.service.mapper.LocationPointMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +46,8 @@ public class AnimalVisitedLocationMapperImpl implements AnimalVisitedLocationMap
                     entity.setLocationPoint(locationPointMapper.toEntity(box.get()));
                 }
             }
-            if (dto.getDateTimeOfVisitedLocationPoint()!=null)
-                entity.setDateTimeOfVisitedLocationPoint(dto.getDateTimeOfVisitedLocationPoint());
+            if (dto.getDateTimeOfVisitLocationPoint()!=null)
+                entity.setDateTimeOfVisitLocationPoint(dto.getDateTimeOfVisitLocationPoint());
         }
         return entity;
 
@@ -65,8 +64,8 @@ public class AnimalVisitedLocationMapperImpl implements AnimalVisitedLocationMap
                 dto.setId(entity.getId());
             if (entity.getLocationPoint()!=null)
                 dto.setLocationPointId(entity.getLocationPoint().getId());
-            if (entity.getDateTimeOfVisitedLocationPoint()!=null)
-                dto.setDateTimeOfVisitedLocationPoint(entity.getDateTimeOfVisitedLocationPoint());
+            if (entity.getDateTimeOfVisitLocationPoint()!=null)
+                dto.setDateTimeOfVisitLocationPoint(entity.getDateTimeOfVisitLocationPoint());
         }
         return dto;
     }

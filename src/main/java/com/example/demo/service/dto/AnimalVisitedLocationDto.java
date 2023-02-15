@@ -21,8 +21,8 @@ public class AnimalVisitedLocationDto {
     private Long locationPointId;
 
     @JsonProperty
-    @NotNull(message = "dateTimeOfVisitedLocationPoint is mandatory")
-    private Date dateTimeOfVisitedLocationPoint;
+    @NotNull(message = "dateTimeOfVisitLocationPoint is mandatory")
+    private Date dateTimeOfVisitLocationPoint;
 
 
 

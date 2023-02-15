@@ -15,15 +15,11 @@ import com.example.demo.service.dto.AnimalVisitedLocationUpdateDto;
 import com.example.demo.service.mapper.AnimalVisitedLocationMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -91,8 +87,8 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
                     {
                         if (dto.getStartDateTime()!=null && dto.getEndDateTime()!=null)
                         {
-                            if (location.getDateTimeOfVisitedLocationPoint().compareTo(startDateTime)>0
-                                    && location.getDateTimeOfVisitedLocationPoint().compareTo(endDateTime)<0 )
+                            if (location.getDateTimeOfVisitLocationPoint().compareTo(startDateTime)>0
+                                    && location.getDateTimeOfVisitLocationPoint().compareTo(endDateTime)<0 )
                             {
                                 dtoList.add(animalVisitedLocationMapper.toDto(location));
                             }
@@ -180,7 +176,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
                 AnimalVisitedLocation entity = new AnimalVisitedLocation();
                 entity.setLocationPoint(locationPoint);
-                entity.setDateTimeOfVisitedLocationPoint(new Date());
+                entity.setDateTimeOfVisitLocationPoint(new Date());
                 entity = animalVisitedLocationRepository.save(entity);
                 if (entity!=null)
                 {

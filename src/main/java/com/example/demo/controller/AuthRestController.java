@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.text.ParseException;
@@ -55,12 +56,14 @@ public class AuthRestController {
     }
 
     @PostMapping("/login")
-    public @ResponseBody AccountDto login(Principal principal)
+    public @ResponseBody AccountDto login(Principal principal, HttpServletRequest request)
     {
-        if (principal.getName()!=null)
+        if (principal!=null)
         {
             log.info("load user information");
             Account user = (Account) userDetailsService.loadUserByUsername(principal.getName());
+            //set login user
+            request.getSession().setAttribute("user", user.getEmail());
             return accountMapper.toDto(user);
         }
         else {
@@ -85,16 +88,21 @@ public class AuthRestController {
                 log.info("login in the system");
                 authenticateUserAndSetSession(dto.getEmail(), password, request);
                 String authUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-                log.info("login name is "+authUserName);
                 if (authUserName!=null)
                 {
                     log.info("success authorize user with email "+authUserName);
+                    //set name
+                    request.getSession().setAttribute("user", authUserName);
+
+                    return new ResponseEntity(accountMapper.convertDtoToViewDto(item), HttpStatus.CREATED);
                 }
                 else
                 {
                     log.warn("authorization failed");
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }
-                return new ResponseEntity(accountMapper.convertDtoToViewDto(item), HttpStatus.CREATED);
+
+
             }
             else {
                 log.error("register failed");
@@ -107,6 +115,27 @@ public class AuthRestController {
             return new ResponseEntity<>(ex.getStatusCode());
         }
     }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request)
+    {
+        log.info("clear session");
+        request.getSession().invalidate();
+        log.info("logout success");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/check-get")
+    public String check(HttpSession session, Principal principal)
+    {
+        String principalName = principal!=null? principal.getName(): "not authorized";
+        String realName = (String) session.getAttribute("user");
+        log.info("principal name {}, name un session {}", principalName, realName);
+        return realName;
+        //for post method - use HttpServletRequest
+    }
+
 
 
     private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request) {

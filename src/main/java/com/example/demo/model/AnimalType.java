@@ -13,6 +13,6 @@ public class AnimalType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "type", length = 50, nullable = false)
+    @Column(name = "type", nullable = false)
     private String type;
 }

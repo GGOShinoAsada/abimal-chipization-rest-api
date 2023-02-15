@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -50,17 +52,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.NEVER)
-                .and()
-                .csrf().ignoringAntMatchers("/**")
-                .and()
+                .csrf().disable()
+                .httpBasic().and()
                 .authorizeRequests()
                 .antMatchers("/login")
-                .permitAll()//.authenticated()
+                .permitAll()
                 .antMatchers("/registration").permitAll()
-                .and()
-                .httpBasic();
+                .antMatchers("/logout").permitAll()
+                .antMatchers("/check-get").permitAll()
+                .anyRequest().authenticated()//chane to permitAll
+                .and().
+                logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+                .invalidateHttpSession(true).deleteCookies("JSESSIONID");
+
         //super.configure(http);
     }
 

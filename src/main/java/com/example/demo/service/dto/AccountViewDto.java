@@ -13,7 +13,7 @@ import javax.validation.constraints.Positive;
 @Data
 public class AccountViewDto {
     @JsonProperty
-    @NotEmpty(message = "id is mandatory")
+    @NotNull(message = "id is mandatory")
     @Positive(message = "account id must be positive")
     private Integer id;
 

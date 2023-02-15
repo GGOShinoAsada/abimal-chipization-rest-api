@@ -6,6 +6,7 @@ import com.example.demo.service.dto.LocationPointDto;
 import lombok.Lombok;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,48 +37,50 @@ public class LocationRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
-    public ResponseEntity<LocationPointDto> findByLocationPointId(@PathVariable Long id)
+    public ResponseEntity<LocationPointDto> findByLocationPointId(@PathVariable Long id, HttpSession session)
     {
+
         log.info("searching location point by id {}",id);
         if (checkId(id))
         {
-           Optional<LocationPointDto> box = locationPointService.findById(id);
-           if (box.isPresent())
-           {
-               log.info("find location point with id "+box.get().getId());
-               return new ResponseEntity(box.get(), HttpStatus.OK);
-           }
-           else
-           {
-               log.warn("location point was not found");
-               return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-           }
+            Optional<LocationPointDto> box = locationPointService.findById(id);
+            if (box.isPresent())
+            {
+                log.info("find location point with id "+box.get().getId());
+                return new ResponseEntity(box.get(), HttpStatus.OK);
+            }
+            else
+            {
+                log.warn("location point was not found");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         }
         else
         {
             log.warn("id is mandatory and must be positive");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
-    public ResponseEntity<LocationPointDto> addLocationPoint(@Valid @RequestBody LocationPointDto dto)
+    public ResponseEntity<LocationPointDto> addLocationPoint(@Valid @RequestBody LocationPointDto dto, HttpServletRequest request)
     {
         log.info("adding new location point");
         try
         {
-           Optional<LocationPointDto> box = locationPointService.add(dto);
-           if (box.isPresent())
-           {
-               log.info("adding locationPoint success");
-               return new ResponseEntity<>(box.get(), HttpStatus.CREATED);
-           }
-           else
-           {
-               log.warn("adding failed");
+            Optional<LocationPointDto> box = locationPointService.add(dto);
+            if (box.isPresent())
+            {
+                log.info("adding locationPoint success");
+                return new ResponseEntity<>(box.get(), HttpStatus.CREATED);
+            }
+            else
+            {
+                log.warn("adding failed");
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-           }
+            }
         }
         catch (ResponseStatusException ex)
         {
@@ -86,8 +91,10 @@ public class LocationRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{id}")
-    public ResponseEntity<LocationPointDto> updateLocationPoint(@PathVariable Long id, @Valid @RequestBody LocationPointDto dto)
+    public ResponseEntity<LocationPointDto> updateLocationPoint(@PathVariable Long id, @Valid @RequestBody LocationPointDto dto, HttpServletRequest request)
     {
+        String username = (String) request.getSession().getAttribute("user");
+        log.info("username "+username);
         log.info("updating information about location point");
         if (checkId(id))
         {
@@ -117,12 +124,13 @@ public class LocationRestController {
             log.warn("id is mandatory and must be positive");
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+
     }
 
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeLocationPoint(@PathVariable Long id)
+    public ResponseEntity<Void> removeLocationPoint(@PathVariable Long id, HttpServletRequest request)
     {
         log.info("removing location point with id "+id);
         if (checkId(id))
@@ -148,7 +156,7 @@ public class LocationRestController {
     private final Boolean checkId(Long id)
     {
         Boolean isAllowId = false;
-        if (id!=null && !id.equals(""))
+        if (id!=null)
         {
             isAllowId = id>0;
         }

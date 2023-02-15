@@ -256,7 +256,7 @@ public class AnimalRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{animalId}/types/{typeId}")
-    public ResponseEntity<Void> removeAnimalTypeForAnimal(@PathVariable("animalId") Long animalId, @Valid @PathVariable("typeId") Long typeId)
+    public ResponseEntity<Void> removeAnimalTypeForAnimal(@PathVariable("animalId") Long animalId,  @PathVariable("typeId") Long typeId)
     {
         log.info("removing animal type for animal");
         if (checkId(animalId) && checkId(typeId))
@@ -535,7 +535,7 @@ public class AnimalRestController {
     private Boolean checkId(Long id)
     {
         Boolean isAllowId = false;
-        if (id!=null && !id.equals(""))
+        if (id!=null)
         {
             isAllowId = id>0;
         }

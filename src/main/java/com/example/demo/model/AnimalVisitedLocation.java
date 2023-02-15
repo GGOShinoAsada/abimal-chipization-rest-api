@@ -21,5 +21,5 @@ public class AnimalVisitedLocation {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "datetime_of_visit_location_point", nullable = false)
-    private Date dateTimeOfVisitedLocationPoint;
+    private Date dateTimeOfVisitLocationPoint;
 }

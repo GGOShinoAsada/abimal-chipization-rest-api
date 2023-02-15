@@ -90,7 +90,7 @@ public class AccountRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{id}")
-    public ResponseEntity<AccountViewDto> updateAccount(@PathVariable Integer id, @RequestBody AccountDto dto, Principal principal)
+    public ResponseEntity<AccountViewDto> updateAccount(@PathVariable Integer id, @Valid @RequestBody AccountDto dto, Principal principal)
     {
         log.info("updating information about account");
         Boolean isValid = checkId(id);
@@ -153,7 +153,7 @@ public class AccountRestController {
     private Boolean checkId(Integer id)
     {
         Boolean isAllowId =false;
-        if (id!=null && !id.equals(""))
+        if (id!=null)
         {
             isAllowId = id>0;
         }
