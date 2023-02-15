@@ -47,7 +47,8 @@ public class AnimalDto {
     private LifeStatus lifeStatus;
 
     @JsonProperty
-    //@NotNull(message = "chippingDate time is mandatory")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date chippingDateTime;
 
     @JsonProperty
