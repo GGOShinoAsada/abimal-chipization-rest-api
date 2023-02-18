@@ -12,12 +12,13 @@ import com.example.demo.service.mapper.AccountMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,12 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * реализация бизнес логики интерфейса AccountService
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -57,11 +64,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public List<AccountViewDto> search(AccountDto dto, Pageable pageable) {
+    public List<AccountViewDto> search(String username, AccountDto dto, Pageable pageable) {
         log.info("search account by parameters");
         Page<Account> entities = Page.empty();
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").ascending());
         if (dto.getFirstName()!=null && dto.getLastName()!=null && dto.getEmail()!=null)
         {
+
             entities = accountRepository.findByFirstNameContainingAndLastNameContainingAndEmailContaining(dto.getFirstName(), dto.getLastName(), dto.getEmail(), pageable);
         }
         else
@@ -73,7 +82,8 @@ public class AccountServiceImpl implements AccountService {
         {
             for (Account entity: entities.toList())
             {
-                dtoList.add(accountMapper.convertEntityToViewDto(entity));
+                if (entity.getEmail().equals(username))
+                    dtoList.add(accountMapper.convertEntityToViewDto(entity));
             }
         }
         return dtoList;
@@ -81,12 +91,21 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public Optional<AccountViewDto> findById(Integer id) {
+    public Optional<AccountViewDto> findById(String username, Integer id) {
         log.info("find account with id {}",id);
-        Optional<Account> entity = accountRepository.findById(id);
-        if (entity.isPresent())
+        Optional<Account> box = accountRepository.findById(id);
+        if (box.isPresent())
         {
-            return Optional.of(accountMapper.convertEntityToViewDto(entity.get()));
+            Account entity = box.get();
+            if (entity.getEmail().equals(username))
+            {
+                return Optional.of(accountMapper.convertEntityToViewDto(box.get()));
+            }
+            else
+            {
+                log.warn("found account does not belong to you");
+                return Optional.empty();
+            }
         }
         else {
             String message = "account with is "+id+" was not found";

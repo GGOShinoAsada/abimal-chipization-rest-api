@@ -3,13 +3,18 @@ package com.example.demo.model;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * сущность Account
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Data
 @Entity
 @Table(name = "account")
@@ -31,9 +36,6 @@ public class Account implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    //@CollectionTable(name = "user_roles", joinColumns = {@JoinColumn(name = "account_id")})
-    //@Enumerated(EnumType.STRING)
-    //@ElementCollection(fetch = FetchType.EAGER)
     @Transient
     private Set<Role> roles = new HashSet();
 

@@ -3,12 +3,17 @@ package com.example.demo.service.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+/**
+ * dto класс Account для выдачи данных
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @NoArgsConstructor
 @Data
 public class AccountViewDto {

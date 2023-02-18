@@ -5,19 +5,20 @@ import com.example.demo.model.Role;
 import com.example.demo.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.HashSet;
-
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * переопределение реализации интерфейса бизнес логики UserDetailsService
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

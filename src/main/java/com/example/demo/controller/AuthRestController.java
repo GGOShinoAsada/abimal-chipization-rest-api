@@ -16,22 +16,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
+/**
+ * контроллер авторизации и регистрации
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @RestController
 @Validated
@@ -55,6 +52,13 @@ public class AuthRestController {
         this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * метод-заглушка для обработки входа в приложение
+     * может быть выполнен как авторизованными, так и неавторизованными пользователями
+     * @param principal
+     * @param request
+     * @return авторизованный аккаунт AccountDto или null
+     */
     @PostMapping("/login")
     public @ResponseBody AccountDto login(Principal principal, HttpServletRequest request)
     {
@@ -62,8 +66,6 @@ public class AuthRestController {
         {
             log.info("load user information");
             Account user = (Account) userDetailsService.loadUserByUsername(principal.getName());
-            //set login user
-            request.getSession().setAttribute("user", user.getEmail());
             return accountMapper.toDto(user);
         }
         else {
@@ -72,6 +74,18 @@ public class AuthRestController {
         }
     }
 
+    /**
+     * метод регистрации новых пользователей
+     * может быть выполнен только неавторизованными пользователями
+     * @param dto
+     * @param principal
+     * @param request
+     * @return
+     * 201 - запрос успешно выполнен;
+     * 400 - неверные параметры запроса;
+     * 403 - запрос от авторизованного аккаунта;
+     * 409 - аккаунт с таким email уже существует;
+     */
     @PostMapping("/registration")
     public ResponseEntity<AccountViewDto> register(@Valid @RequestBody AccountDto dto, Principal principal, HttpServletRequest request)
     {
@@ -91,9 +105,6 @@ public class AuthRestController {
                 if (authUserName!=null)
                 {
                     log.info("success authorize user with email "+authUserName);
-                    //set name
-                    request.getSession().setAttribute("user", authUserName);
-
                     return new ResponseEntity(accountMapper.convertDtoToViewDto(item), HttpStatus.CREATED);
                 }
                 else
@@ -116,7 +127,11 @@ public class AuthRestController {
         }
     }
 
-
+    /**
+     * метод-заглушка для обработки выхода из приложения
+     * @param request
+     * @return
+     */
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request)
     {
@@ -126,20 +141,14 @@ public class AuthRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/check-get")
-    public String check(HttpSession session, Principal principal)
+    /**
+     * выплнение авторизации после регистрации
+     * @param username
+     * @param password
+     * @param request
+     */
+    private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request)
     {
-        String principalName = principal!=null? principal.getName(): "not authorized";
-        String realName = (String) session.getAttribute("user");
-        log.info("principal name {}, name un session {}", principalName, realName);
-        return realName;
-        //for post method - use HttpServletRequest
-    }
-
-
-
-    private void authenticateUserAndSetSession(String username, String password, HttpServletRequest request) {
-
         log.info("#1. username {}, password {}",username, password);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         request.getSession();
@@ -148,19 +157,5 @@ public class AuthRestController {
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
     }
 
-
-
-  /*  @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidatorExceptions(MethodArgumentNotValidException ex)
-    {
-        Map<String, String> errors = new HashMap();
-        ex.getBindingResult().getAllErrors().forEach(error->{
-            String field = ((FieldError) error).getField();
-            String message = error.getDefaultMessage();
-            errors.put(field, message);
-        });
-        return errors;
-    }*/
 
 }

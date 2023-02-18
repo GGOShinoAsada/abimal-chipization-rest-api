@@ -6,6 +6,12 @@ import com.example.demo.service.mapper.LocationPointMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/**
+ * реализация класа маппера LocationPointMapper
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class LocationPointMapperImpl implements LocationPointMapper {

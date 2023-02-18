@@ -10,16 +10,22 @@ import com.example.demo.service.mapper.AnimalTypeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * реализация бизнес логики интерфейса AnimalServcice
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class AnimalServiceImpl implements AnimalService {
@@ -68,6 +74,7 @@ public class AnimalServiceImpl implements AnimalService {
         Date startDateTime = null;
         Date endDateTime = null;
         Page<Animal> entities = Page.empty();
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id").ascending());
         if (dto.getStartDateTime() != null && dto.getEndDateTime()!=null && dto.getChipperId()!=null && dto.getChippingLocationId()!=null && dto.getLifeStatus()!=null && dto.getGender()!=null)
         {
             try
@@ -421,7 +428,6 @@ public class AnimalServiceImpl implements AnimalService {
         }
     }
 
-    //@Transactional
     private void validateAnimal(AnimalDto dto, Boolean isCheckingTypes) throws ResponseStatusException
     {
         Boolean isValid = false;

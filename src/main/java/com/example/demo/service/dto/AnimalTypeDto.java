@@ -3,11 +3,14 @@ package com.example.demo.service.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
+/**
+ * dto класс AnimalType
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @NoArgsConstructor
 @Data
 public class AnimalTypeDto {

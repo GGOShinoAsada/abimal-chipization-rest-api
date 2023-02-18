@@ -19,11 +19,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * реализация бизнес логики интерфейса AnimalVisitedLocationService
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationService {
@@ -98,6 +103,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
                             dtoList.add(animalVisitedLocationMapper.toDto(location));
                         }
                     }
+                    dtoList.sort(Comparator.comparing(AnimalVisitedLocationDto::getDateTimeOfVisitLocationPoint));
                 }
             }
             else

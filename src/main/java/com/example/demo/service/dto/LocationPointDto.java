@@ -2,9 +2,14 @@ package com.example.demo.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
 import javax.validation.constraints.*;
 
+/**
+ * dto класс LocationPoint
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @NoArgsConstructor
 @Data
 public class LocationPointDto {

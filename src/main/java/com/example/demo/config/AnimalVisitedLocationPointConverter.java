@@ -1,23 +1,23 @@
 package com.example.demo.config;
 
 import com.example.demo.model.AnimalVisitedLocation;
-import com.example.demo.repository.AnimalVisitedLocationRepository;
 import com.example.demo.service.AnimalVisitedLocationService;
 import com.example.demo.service.dto.AnimalVisitedLocationDto;
 import com.example.demo.service.mapper.AnimalVisitedLocationMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.AttributeConverter;
 import java.util.*;
 
-
+/**
+ * сериализация и десериация посещенных точек локации для сущности Animal
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @Component
 public class AnimalVisitedLocationPointConverter implements AttributeConverter<List<AnimalVisitedLocation>, String> {
@@ -34,6 +34,11 @@ public class AnimalVisitedLocationPointConverter implements AttributeConverter<L
         this.animalVisitedLocationMapper = animalVisitedLocationMapper;
     }
 
+    /**
+     * convert list of AnimalVisitedLocation to string
+     * @param attribute
+     * @return string
+     */
     @Override
     public String convertToDatabaseColumn(List<AnimalVisitedLocation> attribute)
     {
@@ -54,6 +59,11 @@ public class AnimalVisitedLocationPointConverter implements AttributeConverter<L
         return animalVisitedLocationIds;
     }
 
+    /**
+     * convert string to list of animalVisitedLocation
+     * @param dbData
+     * @return
+     */
     @Transactional
     @Override
     public List<AnimalVisitedLocation> convertToEntityAttribute(String dbData) {

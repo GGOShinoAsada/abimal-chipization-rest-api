@@ -3,25 +3,23 @@ package com.example.demo.controller;
 import com.example.demo.config.ResponseStatusException;
 import com.example.demo.service.LocationPointService;
 import com.example.demo.service.dto.LocationPointDto;
-import lombok.Lombok;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
+/**
+ * контроллер для точек локации животных
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @RestController
 @RequestMapping("/locations")
@@ -35,6 +33,17 @@ public class LocationRestController {
         this.locationPointService = locationPointService;
     }
 
+    /**
+     * получение информации о точке локации животных
+     * запрос может быть выполнен только пользователями с ролью user
+     * @param id
+     * @param session
+     * @return
+     * 200 - запрос успешно выполнен;
+     * 400 - неверные апараметры запроса;
+     * 401 - неверные авторизационные данные;
+     * 404 - точка локации с id не найдена;
+     */
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<LocationPointDto> findByLocationPointId(@PathVariable Long id, HttpSession session)
@@ -63,6 +72,17 @@ public class LocationRestController {
 
     }
 
+    /**
+     * добавление точки локации животных
+     * запрос может выполнять только пользователь с ролью user
+     * @param dto
+     * @param request
+     * @return
+     * 201 - запрос успешно выполнен;
+     * 400 - неверные пармметры запроса;
+     * 401 - запрос от неваторизованного акаунта, неверные авторизационные данные;
+     * 409 точка локации с latitude и longitude уже существует;
+     */
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
     public ResponseEntity<LocationPointDto> addLocationPoint(@Valid @RequestBody LocationPointDto dto, HttpServletRequest request)
@@ -89,6 +109,19 @@ public class LocationRestController {
         }
     }
 
+    /**
+     * обновление точки локации животных
+     * запрос может выполнять только пользователь с ролью user
+     * @param id
+     * @param dto
+     * @param request
+     * @return
+     * 200 - запрос успешно выполнен;
+     * 400 - неверные параметры запроса;
+     * 401 - запрос от неавторизованного аккаунта, неверные авторизационные данные;
+     * 409 - точка локации с latitude и longitude уже существует;
+     * 404 - точка локации с id не найдена;
+     */
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{id}")
     public ResponseEntity<LocationPointDto> updateLocationPoint(@PathVariable Long id, @Valid @RequestBody LocationPointDto dto, HttpServletRequest request)
@@ -127,6 +160,17 @@ public class LocationRestController {
 
     }
 
+    /**
+     * удаление точки локаци животных
+     * запрос может выполнять только пользователь с ролью user
+     * @param id
+     * @param request
+     * @return
+     * 200 - запрос успешно выполнен;
+     * 404 - точка локации с id не найдена;
+     * 401 - запрос от неавторизованного аккаунта, неверные авторизационые данные;
+     * 400 - неверные парметриы запроса;
+     */
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{id}")
@@ -153,6 +197,11 @@ public class LocationRestController {
         }
     }
 
+    /**
+     * валидация id
+     * @param id
+     * @return isValid value
+     */
     private final Boolean checkId(Long id)
     {
         Boolean isAllowId = false;

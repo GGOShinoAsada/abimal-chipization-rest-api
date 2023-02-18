@@ -1,11 +1,15 @@
 package com.example.demo.model;
 
 import lombok.Data;
-import org.springframework.context.annotation.Lazy;
-
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * сущность AnimalVisitedLocation
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Data
 @Entity
 @Table(name = "animal_visited_location")

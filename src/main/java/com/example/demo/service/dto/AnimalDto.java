@@ -2,16 +2,23 @@ package com.example.demo.service.dto;
 
 import com.example.demo.model.Gender;
 import com.example.demo.model.LifeStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * dto класс Animal
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @NoArgsConstructor
 @Data
 public class AnimalDto {

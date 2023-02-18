@@ -5,10 +5,15 @@ import com.example.demo.service.dto.AnimalTypeDto;
 import com.example.demo.service.mapper.AnimalTypeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * реализация интерфейса маппера AnimalTypeMapper
+ * @author ROMAN
+ * @date 2023-20-17
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class AnimalTypeMapperImpl implements AnimalTypeMapper {

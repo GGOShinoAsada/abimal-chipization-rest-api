@@ -6,8 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.util.Date;
 
+/**
+ * dto класс Animal для организации поиска
+ * @author ROMAN
+ * @version 1.0
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Data
 public class AnimalSearchDto {
 

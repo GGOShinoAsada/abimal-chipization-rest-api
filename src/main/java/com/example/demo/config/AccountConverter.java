@@ -5,11 +5,15 @@ import com.example.demo.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
-
 import org.springframework.stereotype.Component;
-
 import java.util.Optional;
 
+/**
+ * сериализация и десериализация аккаунта
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @Component
 public class AccountConverter implements Converter<String, Account> {

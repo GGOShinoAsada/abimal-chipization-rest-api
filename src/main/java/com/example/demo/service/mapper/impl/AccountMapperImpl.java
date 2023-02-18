@@ -7,6 +7,12 @@ import com.example.demo.service.mapper.AccountMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/**
+ * реализация интерфейса маппера AccountMapper
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class AccountMapperImpl implements AccountMapper {

@@ -3,16 +3,19 @@ package com.example.demo.service.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.*;
 
+/**
+ * dto класс Account
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @NoArgsConstructor
 @Data
 public class AccountDto {
 
     @JsonProperty("id")
-   // @NotNull(message = "id is mandatory")
-    //@Positive(message = "account id must be positive")
     private Integer id;
 
     @JsonProperty("firstName")

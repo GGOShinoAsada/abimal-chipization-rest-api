@@ -3,13 +3,17 @@ package com.example.demo.model;
 import com.example.demo.config.AnimalTypeListConverter;
 import com.example.demo.config.AnimalVisitedLocationPointConverter;
 import lombok.Data;
-import org.springframework.data.repository.cdi.Eager;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * сущность Animal
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Data
 @Entity
 @Table(name = "animal")

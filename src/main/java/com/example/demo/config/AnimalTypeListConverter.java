@@ -6,10 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
 import javax.persistence.AttributeConverter;
 import java.util.*;
 
+/**
+ * сериализация и десериализация типов животных для сущности Animal
+ * @author ROMAN
+ * @date 2023-02-17
+ * @version 1.0
+ */
 @Slf4j
 @Component
 public class AnimalTypeListConverter implements AttributeConverter<Set<AnimalType>, String> {
@@ -22,6 +27,11 @@ public class AnimalTypeListConverter implements AttributeConverter<Set<AnimalTyp
         this.animalTypeRepository = animalTypeRepository;
     }
 
+    /**
+     * convert set of AnimalType to string
+     * @param attribute
+     * @return string
+     */
     @Override
     public String convertToDatabaseColumn(Set<AnimalType> attribute) {
         log.info("convert set of animalType to string");
@@ -41,6 +51,11 @@ public class AnimalTypeListConverter implements AttributeConverter<Set<AnimalTyp
         return animalTypeIds;
     }
 
+    /**
+     * convert string to set of AnimalType
+     * @param dbData
+     * @return set of AnimalType
+     */
     @Override
     public Set<AnimalType> convertToEntityAttribute(String dbData) {
         log.info("convert string to set of animalType");
