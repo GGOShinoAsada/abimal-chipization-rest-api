@@ -25,13 +25,13 @@ public class AccountMapperImpl implements AccountMapper {
         {
             if (dto.getId()!=null)
                 entity.setId(dto.getId());
-            if (!dto.getFirstName().isEmpty())
+            if (dto.getFirstName()!=null)
                 entity.setFirstName(dto.getFirstName());
-            if (!dto.getLastName().isEmpty())
+            if (dto.getLastName()!=null)
                 entity.setLastName(dto.getLastName());
-            if (!dto.getEmail().isEmpty())
+            if (dto.getEmail()!=null)
                 entity.setEmail(dto.getEmail());
-            if (!dto.getPassword().isEmpty())
+            if (dto.getPassword()!=null)
                 entity.setPassword(dto.getPassword());
         }
         return entity;
@@ -45,13 +45,13 @@ public class AccountMapperImpl implements AccountMapper {
         {
             if (entity.getId()!=null)
                 dto.setId(entity.getId());
-            if (!entity.getFirstName().isEmpty())
+            if (entity.getFirstName()!=null)
                 dto.setFirstName(entity.getFirstName());
-            if (!entity.getLastName().isEmpty())
+            if (entity.getLastName()!=null)
                 dto.setLastName(entity.getLastName());
-            if (!entity.getEmail().isEmpty())
+            if (entity.getEmail()!=null)
                 dto.setEmail(entity.getEmail());
-            if (!entity.getPassword().isEmpty())
+            if (entity.getPassword()!=null)
                 dto.setPassword(entity.getPassword());
         }
         return dto;
@@ -67,15 +67,15 @@ public class AccountMapperImpl implements AccountMapper {
             {
                 viewDto.setId(entity.getId());
             }
-            if (!entity.getFirstName().isEmpty())
+            if (entity.getFirstName()!=null)
             {
                 viewDto.setFirstName(entity.getFirstName());
             }
-            if (!entity.getLastName().isEmpty())
+            if (entity.getLastName()!=null)
             {
                 viewDto.setLastName(entity.getLastName());
             }
-            if (!entity.getEmail().isEmpty())
+            if (entity.getEmail()!=null)
             {
                 viewDto.setEmail(entity.getEmail());
             }
@@ -93,15 +93,15 @@ public class AccountMapperImpl implements AccountMapper {
             {
                 viewDto.setId(dto.getId());
             }
-            if (!dto.getFirstName().isEmpty())
+            if (dto.getFirstName()!=null)
             {
                 viewDto.setFirstName(dto.getFirstName());
             }
-            if (!dto.getLastName().isEmpty())
+            if (dto.getLastName()!=null)
             {
                 viewDto.setLastName(dto.getLastName());
             }
-            if (!dto.getEmail().isEmpty())
+            if (dto.getEmail()!=null)
             {
                 viewDto.setEmail(dto.getEmail());
             }

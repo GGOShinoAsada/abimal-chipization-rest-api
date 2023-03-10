@@ -54,7 +54,7 @@ public class AnimalDto {
     private LifeStatus lifeStatus;
 
     @JsonProperty
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    //@JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date chippingDateTime;
 
@@ -73,6 +73,7 @@ public class AnimalDto {
 
 
     @JsonProperty
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date deathDateTime;
 
 }

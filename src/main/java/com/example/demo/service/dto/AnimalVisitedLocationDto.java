@@ -3,6 +3,8 @@ package com.example.demo.service.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.Date;
@@ -27,6 +29,7 @@ public class AnimalVisitedLocationDto {
 
     @JsonProperty
     @NotNull(message = "dateTimeOfVisitLocationPoint is mandatory")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateTimeOfVisitLocationPoint;
 
 
